@@ -35,8 +35,8 @@ add_executable(stereo_rectifier_node
 )
 
 target_link_libraries(stereo_rectifier_node
-	${catkin_LIBRARIES}
-	${OpenCV_LIBS}
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBS}
 )
 
 add_executable(stereo_processor_node
@@ -53,10 +53,9 @@ add_executable(stereo_processor_node
 add_dependencies(stereo_processor_node ${PROJECT_NAME}_gencfg)
 
 target_link_libraries(stereo_processor_node
-	${catkin_LIBRARIES}
-	${OpenCV_LIBS}
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBS}
   ${CSPARSE_LIBRARY}
-  ${CHOLMOD_LIBRARIES}
   g2o_core g2o_types_slam3d g2o_solver_csparse csparse g2o_stuff g2o_csparse_extension g2o_types_sba cholmod
 )
 

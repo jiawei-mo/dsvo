@@ -9,26 +9,26 @@
 
 struct Pose
 {
-	Eigen::Vector3d position;
-	Eigen::Quaterniond orientation;
+  Eigen::Vector3d position;
+  Eigen::Quaterniond orientation;
 
-	Pose() {
-		position = Eigen::Vector3d::Zero();
-		orientation = Eigen::Quaterniond::Identity();
-	}
+  Pose() {
+    position = Eigen::Vector3d::Zero();
+    orientation = Eigen::Quaterniond::Identity();
+  }
 };
 
 struct State {
-	// mean
-	ros::Time time;
-	Pose pose;
-	Eigen::Vector3d velocity;
+  // mean
+  ros::Time time;
+  Pose pose;
+  Eigen::Vector3d velocity;
 
-	State();
-	ros::NodeHandle nh;
-	ros::Publisher pose_pub;
-	void reset();
-	void showPose(bool stereo_match_flag);
+  State();
+  ros::NodeHandle nh;
+  ros::Publisher pose_pub;
+  void reset();
+  void showPose(bool stereo_match_flag);
 };
 
 #endif

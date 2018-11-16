@@ -20,15 +20,15 @@
 class PoseEdge:public g2o::BaseUnaryEdge<1, Eigen::VectorXd, g2o::VertexSE3Expmap>
 {
 public:
-	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-	PoseEdge(const Eigen::Vector3d& point, const Eigen::Matrix3d& K, const cv::Mat& img)
-	: start_point(point), fx(K(0,0)), fy(K(1,1)), cx(K(0,2)), cy(K(1,2)), dest_img(img)
-	{}
+  PoseEdge(const Eigen::Vector3d& point, const Eigen::Matrix3d& K, const cv::Mat& img)
+  : start_point(point), fx(K(0,0)), fy(K(1,1)), cx(K(0,2)), cy(K(1,2)), dest_img(img)
+  {}
 
-	void computeError();
+  void computeError();
 
-	void linearizeOplus();
+  void linearizeOplus();
 
     virtual bool read(std::istream& /*is*/)
     {
@@ -44,9 +44,9 @@ public:
 
 private:
 
-	Eigen::Vector3d start_point;
-	double fx=0, fy=0, cx=0, cy=0;
-	const cv::Mat& dest_img;
+  Eigen::Vector3d start_point;
+  double fx=0, fy=0, cx=0, cy=0;
+  const cv::Mat& dest_img;
 };
 
 #endif

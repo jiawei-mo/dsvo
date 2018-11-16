@@ -7,48 +7,48 @@ using namespace std;
 
 void PoseEdge::computeError()
 {
-	const g2o::VertexSE3Expmap* vtx = static_cast<const g2o::VertexSE3Expmap*> (_vertices[0]);
-	Eigen::Vector3d proj_point = vtx->estimate().map(start_point);
+  const g2o::VertexSE3Expmap* vtx = static_cast<const g2o::VertexSE3Expmap*> (_vertices[0]);
+  Eigen::Vector3d proj_point = vtx->estimate().map(start_point);
 
-	double u = proj_point[0]/proj_point[2]*fx + cx;
-	double v = proj_point[1]/proj_point[2]*fy + cy;
+  double u = proj_point[0]/proj_point[2]*fx + cx;
+  double v = proj_point[1]/proj_point[2]*fy + cy;
 
 
     if(( u-BATCH_SIZE/2-4 ) <0 || ( u+BATCH_SIZE/2+4 ) >dest_img.cols || (v-BATCH_SIZE/2-4 ) <0 || ( v+BATCH_SIZE/2+4 ) >dest_img.rows )
     {
-        _error(0,0) = 999.0;            //TODO
+        _error(0,0) = 999.0;            
         this->setLevel ( 1 );
         return;
     }
-	else
-	{
+  else
+  {
         Eigen::VectorXd batch;
         helper::getBatchAround(dest_img, u, v, batch);
-				_error(0,0) = (batch - _measurement).sum() / BATCH_SIZE / BATCH_SIZE;
+        _error(0,0) = (batch - _measurement).sum() / BATCH_SIZE / BATCH_SIZE;
         // cout<<"start_point"<<endl<<start_point<<endl<<"proj_point"<<endl<<proj_point<<endl<<"u"<<u<<" v "<<v<<endl<<"batch\t"<<batch<<endl<<"_meas\t"<<_measurement<<endl<<endl;
-	}
+  }
 }
 
 void PoseEdge::linearizeOplus()
 {
-	if ( level() == 1 )
+  if ( level() == 1 )
     {
         _jacobianOplusXi = Eigen::Matrix<double, 1, 6>::Zero();
         return;
     }
 
-	const g2o::VertexSE3Expmap* vtx = static_cast<const g2o::VertexSE3Expmap*> (_vertices[0]);
-	Eigen::Vector3d proj_point = vtx->estimate().map(start_point);
+  const g2o::VertexSE3Expmap* vtx = static_cast<const g2o::VertexSE3Expmap*> (_vertices[0]);
+  Eigen::Vector3d proj_point = vtx->estimate().map(start_point);
 
-	double x = proj_point[0];
-	double y = proj_point[1];
-	double invz = 1.0 / proj_point[2];
-	double invz_2 = invz*invz;
+  double x = proj_point[0];
+  double y = proj_point[1];
+  double invz = 1.0 / proj_point[2];
+  double invz_2 = invz*invz;
 
-	double u = x*fx*invz + cx;
-	double v = y*fy*invz + cy;
+  double u = x*fx*invz + cx;
+  double v = y*fy*invz + cy;
 
-	Eigen::Matrix<double, 2, 6> jacobian_uv_ksai;
+  Eigen::Matrix<double, 2, 6> jacobian_uv_ksai;
 
     jacobian_uv_ksai ( 0,0 ) = - x*y*invz_2 *fx;
     jacobian_uv_ksai ( 0,1 ) = ( 1+ ( x*x*invz_2 ) ) *fx;

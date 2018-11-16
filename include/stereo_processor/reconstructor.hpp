@@ -25,8 +25,8 @@
 
 class Reconstructor {
 public:
-	void reconstructAndBundleAdjust(KFData& kf_data,	const cv::Mat& K, int max_opt_step, double max_reproj_dist);
+  void reconstructAndBundleAdjust(KFData& kf_data,  const cv::Mat& K, int max_opt_step, double max_reproj_dist);
 
-	// void refinePixel(const cv::Mat& src_img, const cv::Mat& dest_img, const std::vector<cv::Point2f>& src_fts, std::vector<cv::Point2f>& dest_fts);
+  // void refinePixel(const cv::Mat& src_img, const cv::Mat& dest_img, const std::vector<cv::Point2f>& src_fts, std::vector<cv::Point2f>& dest_fts);
 
 };

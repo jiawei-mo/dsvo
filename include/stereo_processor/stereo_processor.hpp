@@ -40,18 +40,18 @@ typedef pcl::PointCloud<pcl::PointXYZI> PointCloud;
 class StereoProcessor
 {
 private:
-	State state;
+  State state;
 
-	// parameters
+  // parameters
   int OF_size = 11;       // optical flow size
-	float MAX_VEL = 30;      // max pose propagation velocity
+  float MAX_VEL = 30;      // max pose propagation velocity
 
   int BLUR_SZ;            // blur size
   double BLUR_VAR;        // blur value
-	int FEATURE_BLOCKS;     // divide img to blocks for feature detection
+  int FEATURE_BLOCKS;     // divide img to blocks for feature detection
   int FEATURE_THRES;      // FAST threshold
   int FEATURES_PER_CELL;  // # of features in each block cell
-	int FEATURE_OF_PYMD;    // feature tracking pyramid
+  int FEATURE_OF_PYMD;    // feature tracking pyramid
   int PROP_PYMD;          // pose propagation pyramid
   int PROP_MAX_STEP;      // max step for pose propagation
   double PROP_PROJ_DIST;  // max projection distance for pose propagation
@@ -59,43 +59,43 @@ private:
   int PROP_MIN_POINTS;    // min # of features for pose propagation
   double KF_DIST;         // minimal Keyframe distance
   double BA_INLIER_THRES; // minimal inlier ratio for successful bundle adjustment
-	double BA_REPROJ_DIST;  // bundle adjustment max reprojection distance
+  double BA_REPROJ_DIST;  // bundle adjustment max reprojection distance
   int BA_MAX_STEP;        // max step for bundle adjustment
   int SCALE_PYMD;         // scale optimization pyramid
   int SCALE_MAX_STEP;     // max step for scale optimization
-	// bool LOOP_CLOSURE;      // flag for local loop detection and optimization
+  // bool LOOP_CLOSURE;      // flag for local loop detection and optimization
   // bool REFINE_PIXEL;      // refine stereo match after scale optimization
   bool DEBUG;             // debug mode, inspecting frame by frame
   bool TEST_STEREO;       // test pure stereo match mode
 
   // ros modules
-	ros::NodeHandle nh;
-	message_filters::Subscriber<sensor_msgs::Image> *cam0_sub;
-	message_filters::Subscriber<sensor_msgs::Image> *cam1_sub;
-	message_filters::Synchronizer<StereoSyncPolicy> *sync;
-	ros::Publisher pcl_pub;
-	dynamic_reconfigure::Server<dsvo::dsvoConfig> server;
-	dynamic_reconfigure::Server<dsvo::dsvoConfig>::CallbackType f;
-	void imageMessageCallback(const sensor_msgs::ImageConstPtr& img0_cptr, const sensor_msgs::ImageConstPtr& img1_cptr);
+  ros::NodeHandle nh;
+  message_filters::Subscriber<sensor_msgs::Image> *cam0_sub;
+  message_filters::Subscriber<sensor_msgs::Image> *cam1_sub;
+  message_filters::Synchronizer<StereoSyncPolicy> *sync;
+  ros::Publisher pcl_pub;
+  dynamic_reconfigure::Server<dsvo::dsvoConfig> server;
+  dynamic_reconfigure::Server<dsvo::dsvoConfig>::CallbackType f;
+  void imageMessageCallback(const sensor_msgs::ImageConstPtr& img0_cptr, const sensor_msgs::ImageConstPtr& img1_cptr);
 
   // stereo components
-	CameraModel cam0;
-	CameraModel cam1;
-	cv::Mat cur_img0;
-	cv::Mat cur_img1;
-	Frame last_frame;
-	KeyFrame* lastKF;
-	std::vector<KeyFrame> keyframes;
-	// Frame last_frame1;
-	// std::vector<KeyFrame> keyframes1;
-	bool param_changed;
+  CameraModel cam0;
+  CameraModel cam1;
+  cv::Mat cur_img0;
+  cv::Mat cur_img1;
+  Frame last_frame;
+  KeyFrame* lastKF;
+  std::vector<KeyFrame> keyframes;
+  // Frame last_frame1;
+  // std::vector<KeyFrame> keyframes1;
+  bool param_changed;
 
-	// camera pose between consecutive frames
-	Eigen::Matrix3d R_last_frame;
-	Eigen::Vector3d t_last_frame;
+  // camera pose between consecutive frames
+  Eigen::Matrix3d R_last_frame;
+  Eigen::Vector3d t_last_frame;
 
   // components for testing
-	std::ofstream time_ofs;
+  std::ofstream time_ofs;
   PointCloud::Ptr point_cloud;
   bool stereo_match_flag;     // stereo match is called if dsvo failed to generate points
 
@@ -105,34 +105,34 @@ private:
   double cur_time;
 
   // core dsvo modules
-	PoseEstimater pose_estimater;
-	Reconstructor reconstructor;
-	ScaleOptimizer scale_optimizer;
-	// KLT klt;
-	// LocalKFOptimizer local_KF_optimizer;
-	void track(const cv::Mat& _cur_img0, const cv::Mat& _cur_img1, double _cur_time);
-	void monoTrack();
- 	bool propagateState();
- 	void featureTrack(const cv::Mat& cur_img);
-	bool reconstructAndOptimize(KFData& kf_data, Pose& cur_pose, FeaturePoints& curKF_fts_pts, std::vector<bool>& curKF_new_pts_flags);
+  PoseEstimater pose_estimater;
+  Reconstructor reconstructor;
+  ScaleOptimizer scale_optimizer;
+  // KLT klt;
+  // LocalKFOptimizer local_KF_optimizer;
+  void track(const cv::Mat& _cur_img0, const cv::Mat& _cur_img1, double _cur_time);
+  void monoTrack();
+   bool propagateState();
+   void featureTrack(const cv::Mat& cur_img);
+  bool reconstructAndOptimize(KFData& kf_data, Pose& cur_pose, FeaturePoints& curKF_fts_pts, std::vector<bool>& curKF_new_pts_flags);
 
   // helper functions
-	KeyFrame createKeyFrame(const Pose& cur_pose,
-													const FeaturePoints& feature_points=FeaturePoints(), const std::vector<bool>& new_pts_flags=std::vector<bool>());
-	void detectFeatures(const cv::Mat& img, std::vector<cv::KeyPoint>& kps, int fts_per_cell);
-	void triangulateByStereoMatch(KeyFrame& keyframe);
+  KeyFrame createKeyFrame(const Pose& cur_pose,
+                          const FeaturePoints& feature_points=FeaturePoints(), const std::vector<bool>& new_pts_flags=std::vector<bool>());
+  void detectFeatures(const cv::Mat& img, std::vector<cv::KeyPoint>& kps, int fts_per_cell);
+  void triangulateByStereoMatch(KeyFrame& keyframe);
 
-	// frames to be featureTrack
-	bool thread_featureTrack_running;
-	std::queue<cv::Mat> featureFrameQueue;
-	std::thread thread_featureTrack;
-	void featureTrackThread();
+  // frames to be featureTrack
+  bool thread_featureTrack_running;
+  std::queue<cv::Mat> featureFrameQueue;
+  std::thread thread_featureTrack;
+  void featureTrackThread();
 
 public:
-	StereoProcessor();
-	~StereoProcessor();
+  StereoProcessor();
+  ~StereoProcessor();
 
-	void updateConfig(dsvo::dsvoConfig &config, uint32_t level);
+  void updateConfig(dsvo::dsvoConfig &config, uint32_t level);
 
 };
 

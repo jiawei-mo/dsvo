@@ -16,12 +16,12 @@
 
 class PoseEstimater {
 public:
-	double poseEstimate(const FeaturePoints& fts_pts, const cv::Mat& source_img, const cv::Mat& K, const cv::Mat& dest_img, int pymd, int iter, Eigen::Matrix3d& R, Eigen::Vector3d& t);
-	void refine_pose(const PointsWithUncertainties& points, const std::vector<cv::Point2f>& features, const cv::Mat& K, Eigen::Matrix3d& R, Eigen::Vector3d& t);
+  double poseEstimate(const FeaturePoints& fts_pts, const cv::Mat& source_img, const cv::Mat& K, const cv::Mat& dest_img, int pymd, int iter, Eigen::Matrix3d& R, Eigen::Vector3d& t);
+  void refine_pose(const PointsWithUncertainties& points, const std::vector<cv::Point2f>& features, const cv::Mat& K, Eigen::Matrix3d& R, Eigen::Vector3d& t);
 
 private:
-	double poseEstimatePymd(const std::vector<Eigen::Vector3d>& pts, const std::vector<double>& uncertainties, const std::vector<cv::Point2f>& fts,
-													const cv::Mat& source_img, const cv::Mat& dest_img, const Eigen::Matrix3d& K, Eigen::Matrix3d& R, Eigen::Vector3d& t, int iter);
+  double poseEstimatePymd(const std::vector<Eigen::Vector3d>& pts, const std::vector<double>& uncertainties, const std::vector<cv::Point2f>& fts,
+                          const cv::Mat& source_img, const cv::Mat& dest_img, const Eigen::Matrix3d& K, Eigen::Matrix3d& R, Eigen::Vector3d& t, int iter);
 };
 
 #endif
